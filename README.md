@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-  <a href="#-system-architecture">System Architecture</a> •
+  <a href="#-working-app-screenshots">Working App Screenshots</a> •
   <a href="#-detailed-workflow">Detailed Workflow</a> •
   <a href="#-tech-stack">Tech Stack</a> •
   <a href="#-simulation-mode-hackathon-feature">Simulation Mode</a> •
@@ -41,102 +41,27 @@ To build a highly responsive, multi-modal agricultural intelligence platform sup
 
 ---
 
-## 🏗️ System Architecture
+## 📱 Working App Screenshots
 
-The following diagram illustrates the information flows and system boundaries between the AgriSense client, Firebase cloud infrastructure, AI services, and external integrations:
+Below are screenshots showing the AgriSense mobile app interface in action, including the personalized dashboard, AI-driven crop recommendations, soil nutrient insights, real-time weather advisories, IoT sensor map, and the crop diagnosis/expert consultation interface.
 
-```mermaid
-graph TD
-    %% Styling
-    classDef client fill:#e1f5fe,stroke:#01579b,stroke-width:2px;
-    classDef backend fill:#efebe9,stroke:#4e342e,stroke-width:2px;
-    classDef database fill:#efe8e0,stroke:#e65100,stroke-width:2px;
-    classDef ai fill:#ede7f6,stroke:#4a148c,stroke-width:2px;
-    classDef external fill:#e8f5e9,stroke:#1b5e20,stroke-width:2px;
+<p align="center">
+  <img src="assets/1.jpeg" width="30%" alt="Personalized Dashboard" />
+  <img src="assets/2.jpeg" width="30%" alt="Crop Recommendations" />
+  <img src="assets/3.jpeg" width="30%" alt="Soil Nutrient Balance" />
+</p>
+<p align="center">
+  <em>Figure 1: Home Dashboard &mdash; Figure 2: Crop Recommendations &mdash; Figure 3: Soil Nutrient Balance</em>
+</p>
 
-    %% Nodes
-    subgraph Client ["📱 AgriSense Mobile Client (Flutter / React Native)"]
-        App[Mobile App Dashboard]:::client
-        SimPanel[🎛️ Simulation Panel - Hackathon]:::client
-        VoiceUI[🎙️ Voice Assistant Interface]:::client
-        DiagUI[📸 Crop Diagnosis / Camera]:::client
-        RSKUI[🏢 RSK Booking & Consultation]:::client
-    end
-
-    subgraph DB ["🔥 Firebase Cloud Infrastructure"]
-        Firestore[(🗄️ Firestore Database)]:::database
-        Storage[(📁 Firebase Storage)]:::database
-    end
-
-    subgraph AIService ["🧠 AI & Cognitive Services"]
-        Gemini[♊ Gemini Pro & Multimodal API]:::ai
-        SarvamSTT[🗣️ Sarvam AI Speech-to-Text]:::ai
-        SarvamTTS[🔊 Sarvam AI Text-to-Speech]:::ai
-    end
-
-    subgraph External ["🌐 External & Ground Integrations"]
-        WeatherAPI[🌦️ Weather Forecast Service]:::external
-        Sensors[📡 IoT Ground Sensors / API]:::external
-        SMS[💬 Twilio / Fast2SMS API]:::external
-        RSKPortal[💻 Rythu Seva Kendra Dashboard]:::external
-    end
-
-    %% Flow lines
-    App -->|1. Onboard / Sync Profile| Firestore
-    Firestore -->|2. Pull Personalized Dashboard Data| App
-    
-    %% Smart Crop Recommendation
-    App -->|3. Query Crop Recommendation| Gemini
-    Firestore -.->|Provide Soil NPK, pH, Moisture| Gemini
-    WeatherAPI -.->|Provide Expected Rainfall| Gemini
-    Gemini -->|Returns yield, water, profit, risk| App
-    
-    %% Weather & Irrigation Advisory
-    WeatherAPI -->|4. Forecasts| App
-    Sensors -->|Moisture & Growth Stage| Firestore
-    Firestore & WeatherAPI -->|Evaluate| Gemini
-    Gemini -->|Generates irrigation, fertilizer alerts| App
-    
-    %% Voice Assistant
-    VoiceUI -->|5. Speech Input| SarvamSTT
-    SarvamSTT -->|Transcribed Text| Gemini
-    Firestore -.->|Query Farmer Context| Gemini
-    Gemini -->|Synthesized Contextual Text| SarvamTTS
-    SarvamTTS -->|Regional Audio Output| VoiceUI
-    
-    %% Disease Diagnosis
-    DiagUI -->|6. Upload Image| Storage
-    Storage -->|Image URL| Gemini
-    Firestore -.->|Send Soil, Moisture Context| Gemini
-    Gemini -->|Multimodal Analysis & Diagnosis| App
-    App -->|Save History| Firestore
-    
-    %% Expert Consultation
-    Gemini -->|7. Low Confidence / Critical Alert| RSKUI
-    RSKUI -->|Share Case details| Firestore
-    Firestore -->|Sync case ticket| RSKPortal
-    RSKPortal -->|Expert Diagnosis & Action| App
-    
-    %% Harvest Logging
-    App -->|8. Record Harvest metrics| Firestore
-    Firestore -.->|Provide Analytics / Continuous learning| Gemini
-    
-    %% Smart Alerts & SMS
-    Firestore & WeatherAPI -->|9. Trigger Alert Conditions| Gemini
-    Gemini -->|Push Notification| App
-    Gemini -->|Offline SMS in regional lang| SMS
-    SMS -->|SMS text| Phone[📲 Offline Farmer Phone]:::client
-
-    %% Simulation Mode
-    SimPanel -->|10. Override Weather, Sensor, NPK| Firestore
-    SimPanel -->|Immediate Real-Time Trigger| App
-    
-    %% Apply Styling
-    class Client client;
-    class DB database;
-    class AIService ai;
-    class External external;
-```
+<p align="center">
+  <img src="assets/4.jpeg" width="30%" alt="Weather & Advisory" />
+  <img src="assets/5.jpeg" width="30%" alt="Soil Moisture Sensor Network" />
+  <img src="assets/6.jpeg" width="30%" alt="Diagnosis & Expert Support" />
+</p>
+<p align="center">
+  <em>Figure 4: Weather & Advisory &mdash; Figure 5: Sensor Network & Fertilizer Windows &mdash; Figure 6: AI Diagnosis & Expert Consultations</em>
+</p>
 
 ---
 
@@ -315,4 +240,3 @@ Every touchpoint with the AgriSense application is archived securely.
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
