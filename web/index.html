@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!--
+    If you are serving your web app in a path other than the root, change the
+    href value below to reflect the base path you are serving from.
+
+    The path provided below has to start and end with a slash "/" in order for
+    it to work correctly.
+
+    For more details:
+    * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base
+
+    This is a placeholder for base href that will be replaced by the value of
+    the `--base-href` argument provided to `flutter build`.
+  -->
+  <base href="$FLUTTER_BASE_HREF">
+
+  <meta charset="UTF-8">
+  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+  <meta name="description" content="A new Flutter project.">
+
+  <!-- iOS meta tags & icons -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="agrisense">
+  <link rel="apple-touch-icon" href="icons/Icon-192.png">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="favicon.png"/>
+
+  <title>agrisense</title>
+  <link rel="manifest" href="manifest.json">
+</head>
+<body>
+  <script>
+    // Audio Player for Base64 encoded audio (from Sarvam API)
+    window.currentPlayingAudio = null;
+    function playBase64Audio(base64Str) {
+      try {
+        stopBase64Audio();
+        stopSpeakingText();
+        const snd = new Audio("data:audio/wav;base64," + base64Str);
+        window.currentPlayingAudio = snd;
+        snd.play();
+      } catch (e) {
+        console.error("Error playing base64 audio:", e);
+      }
+    }
+    function stopBase64Audio() {
+      if (window.currentPlayingAudio) {
+        try {
+          window.currentPlayingAudio.pause();
+          window.currentPlayingAudio.currentTime = 0;
+        } catch (e) {}
+        window.currentPlayingAudio = null;
+      }
+    }
+
+    // Speech Synthesis for local browser Text-to-Speech (offline fallback) 
+    function speakText(text, lang) {
+      if ('speechSynthesis' in window) {
+        try {
+          stopSpeakingText();
+          stopBase64Audio();
+          const utterance = new SpeechSynthesisUtterance(text);
+          if (lang === 'hi') utterance.lang = 'hi-IN';
+          else if (lang === 'ta') utterance.lang = 'ta-IN';
+          else if (lang === 'te') utterance.lang = 'te-IN';
+          else if (lang === 'mr') utterance.lang = 'mr-IN';
+          else utterance.lang = 'en-IN';
+          window.speechSynthesis.speak(utterance);
+        } catch (e) {
+          console.error("Speech Synthesis failed:", e);
+        }
+      }
+    }
+    function stopSpeakingText() {
+      if ('speechSynthesis' in window) {
+        try {
+          window.speechSynthesis.cancel();
+        } catch (e) {}
+      }
+    }
+
+    // Audio Recorder utilizing browser MediaRecorder
+    let mediaRecorder;
+    let audioChunks = [];
+    function startRecordingAudio() {
+      audioChunks = [];
+      navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
+        mediaRecorder = new MediaRecorder(stream, { mimeType: 'audio/webm' });
+        mediaRecorder.ondataavailable = event => {
+          audioChunks.push(event.data);
+        };
+        mediaRecorder.onstop = () => {
+          const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+          const reader = new FileReader();
+          reader.readAsDataURL(audioBlob);
+          reader.onloadend = () => {
+            const base64data = reader.result.split(',')[1];
+            if (window.onAudioRecordingEnded) {
+              window.onAudioRecordingEnded(base64data);
+            }
+          };
+        };
+        mediaRecorder.start();
+      }).catch(err => {
+        console.error("Failed to access microphone:", err);
+        if (window.onAudioRecordingFailed) {
+          window.onAudioRecordingFailed(err.toString());
+        }
+      });
+    }
+    function stopRecordingAudio() {
+      if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+        mediaRecorder.stop();
+      }
+    }
+  </script>
+  <script src="flutter_bootstrap.js" async></script>
+</body>
+</html>

@@ -1,0 +1,66 @@
+# Firebase API keys and local config (never commit real values)
+.env
+.env.*
+!.env.example
+
+# Firebase platform config files
+**/google-services.json
+**/GoogleService-Info.plist
+firebase.json
+.firebaserc
+
+# Android signing and local SDK paths
+**/local.properties
+**/key.properties
+**/*.jks
+**/*.keystore
+
+# Secrets and credentials
+**/credentials.json
+**/service-account*.json
+**/*secret*
+**/*token*
+
+# Build outputs and caches
+/build/
+android/build/
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+/coverage/
+
+# IDE and OS
+.idea/
+*.iml
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Local analysis output
+test_analysis.txt
+utf8_analysis.txt
+
+# Miscellaneous
+*.class
+*.log
+*.pyc
+*.swp
+.atom/
+.build/
+.buildlog/
+.history
+.svn/
+.swiftpm/
+migrate_working_dir/
+
+# Flutter generated
+**/doc/api/
+**/ios/Flutter/.last_build_id
+app.*.symbols
+app.*.map.json
+/android/app/debug
+/android/app/profile
+/android/app/release
